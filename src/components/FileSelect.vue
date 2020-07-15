@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 <template>
     <div>
         <v-btn color="primary" @click="connectDB()">Connect</v-btn>
@@ -7,8 +6,8 @@
 
 <script>
 
-import { Sequelize } from "sequelize";
-// import {Pool} from 'pg';
+// import { Sequelize } from "sequelize";
+// import pg from 'pg';
 // import shell from 'shelljs';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const shell = require('shelljs');
@@ -37,22 +36,39 @@ import { Sequelize } from "sequelize";
 
 
 // import http from 'http';
-import {exec} from 'child_process';
+// import {exec} from 'child_process';
+// import net from 'net';
 console.log('ok');
-import express from 'express';
-
+// import express from 'express';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pg = require('pg');
 // console.log(electron)
 export default {
     name: 'FileSelect',
     methods: {
         connectDB(){
+            // shell.echo('hello world');
             
-const router=express.Router();
-router.get('/',function(req,res,next){
-    exec('echo "hello world"',function(err,stdout,stderr){
-        console.log(stdout);
-    })
-});
+            const connection = new pg.Client({
+                connectionString: 'postgresql://admin:qwedsa@localhost:5432/psqldb'});
+            console.log(connection);
+            connection.connect().then(() => {
+                console.log("Success");
+            }).catch(error=>{console.log(error)})
+
+            connection.query('SELECT NOW()', (err, res) => {
+  console.log(err, res)
+  connection.end()
+})
+// exec('echo "hello world"',function(err,stdout,stderr){
+//         console.log(stdout);
+//     })            
+// const router=express.Router();
+// router.get('/',function(req,res,next){
+//     exec('echo "hello world"',function(err,stdout,stderr){
+//         console.log(stdout);
+//     })
+// });
 // const cmd='echo "ok rwroking"';
 // const child= spawn(cmd); 
 // child.stdout.on('data', function (data) {
