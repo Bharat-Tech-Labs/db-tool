@@ -41,6 +41,7 @@
       </v-card>
     </v-dialog>
 <Table/>
+<CreateTable/>
     <!-- <v-file-input accept=".csv" label="File input" v-model="fileInput"></v-file-input> -->
     <!-- <v-btn color="primary" @click="parse()">Parse</v-btn>
     <v-btn @click="createTableDialog=true" color="primary">Create</v-btn>
@@ -106,10 +107,12 @@
 import request from "request";
 import papa from "papaparse";
 import Table from "./Table.vue";
+import CreateTable from "./CreateTable.vue";
 export default {
   name: "FileSelect",
 components: {
     Table,
+    CreateTable,
   },
 
   data() {

@@ -36,6 +36,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Header</th>
+            
+            <!-- <th class="text-left">Calories</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in fileHeader" :key="item.name">
+            <td><v-text-field v-model="newHeader.key" value="item.name"></v-text-field></td>
+             
+            
+            <!-- <td>{{ item.calories }}</td> -->
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </div>
 </template>
 
