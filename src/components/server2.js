@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const bodyParser = require('body-parser');
-const papa = require("papaparse");
+
 const express = require('express');
 const { Sequelize , DataTypes ,Model} = require('sequelize');
 const pg = require('pg');
@@ -152,42 +152,12 @@ app.post('/tableColumn', function (req, res, next) {
   })
 });
 
-app.post('/singleInsert', function (req, res, next) {
-  let key;
-  let body;
-  for (key in req.body) {
-    body=JSON.parse(key);
-  }
-  res.writeHead(200, {
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
-  });
-  const data=[];
-  data.push(body.data);
-  res.statusCode = 200;
-  sequelize.authenticate().then(() => {
-    try{
-      console.log(body.name,body.data);
-    const queryInterface = sequelize.getQueryInterface();
-    const result=queryInterface.bulkInsert(body.name,data );
-    // console.log(result);
-    res.write("success");
-    }
-    catch(err){
-      res.write("error");
-    }
-    finally{
-      res.end();
-    }   
-  }).catch((err) => {
-    res.end("qerror");
-  })
-});
 
 
-app.post('/bulkInsert', function (req, res, next) {
-  // console.log('query');
-  // console.log(req.body);
+
+app.post('/insert', function (req, res, next) {
+  console.log('query');
+  console.log(req.body);
   // console.log(JSON.parse(req.body));
   let key;
   let body;
@@ -196,26 +166,8 @@ app.post('/bulkInsert', function (req, res, next) {
     // console.log(JSON.parse(key));
     body=JSON.parse(key);
   }
-  // console.log(body);
-//   const file=JSON.parse(body.file);
-//   const fileObject  = {
-//     lastModified     : file.lastModified,
-//     lastModifiedDate : file.lastModifiedDate,
-//     name             : file.name,
-//     size             : file.size,
-//     type            : file.type,
-//     path:file.path
-//  };  
-//  const fileObject  = {
-//   lastModified     : this.fileInput['lastModified'],
-//   lastModifiedDate : this.fileInput['lastModifiedDate'],
-//   name             : this.fileInput['name'],
-//   size             : this.fileInput['size'],
-//   type            : this.fileInput['type'],
-//   path:this.fileInput['path']
-// };  
-//  console.log(req.body.file);
-//   console.log(req.body.header);
+  console.log(JSON.parse(body.file));
+  console.log(body.header);
   // let n=body.name;
   // console.log(sequelize.models);
   // app.model[body.name].bulkCreate(body.data).then((res)=>{console.log(res)}).catch((err)=>{console.log(err)});
@@ -225,39 +177,59 @@ app.post('/bulkInsert', function (req, res, next) {
   });
   res.statusCode = 200;
   sequelize.authenticate().then(() => {
-    try{
-      console.log(body.name,body.data);
-    const queryInterface = sequelize.getQueryInterface();
-    const result=queryInterface.bulkInsert(body.name,body.data );
-    res.write("success");
-    }
-    catch(err){
-      res.write("error");
-    }
-    finally{
-      res.end();
-    }
-    // console.log(papa);
-    // papa.parse(fileObject, {
-    //   header: true,
-    //   transformHeader: function(h, index) {
-    //     console.log(h);
-    //     for (let i = 0; i < body.header.length; i++) {
-    //       if (body.header[i].name == h) {
-    //         return body.header[i].newName;
+    // const queryInterface = sequelize.getQueryInterface();
+    // queryInterface.bulkInsert(body.name,body.data );
+    // let query="INSERT INTO "+body.name+" (";
+    //       for(let i=0;i<body.header.length;i++)
+    //       {
+    //         query+=body.header[i];
+    //         if(i!=body.header.length-1)
+    //         {
+    //           query+=",";
+    //         }
+    //         else{
+    //           query+=") VALUES";
+    //         }
     //       }
-    //     }
-    //   },
-    //   dynamicTyping: true,
-    //   chunkSize: 1024 * 1024 * 10,
-    //   chunk: function(result) {
-    //     console.log(result.data);
-    //     const queryInterface = sequelize.getQueryInterface();
-    // queryInterface.bulkInsert(body.tableName,result.data );
-        
-      // }
-    // }).then(()=>{console.log("then")}).catch((er)=>{console.log(er)});
-    
+    //       for(let i=0;i<body.data.length;i++)
+    //       {
+    //         if(body.data[i][body.header[0]]!=null || body.data[i][body.header[0]]!=undefined)
+    //         {
+    //           query+=" (";
+    //         for(let j=0;j<body.header.length;j++)
+    //       {
+            
+    //         // console.log(typeof data[i][this.fileHeader[j].newName]);
+    //         if(typeof(body.data[i][body.header[j]])=="number"){
+    //           query+=body.data[i][body.header[j]];
+    //         }
+    //         else{
+    // query+="'"+body.data[i][body.header[j]]+"'";
+    //         }
+            
+    //         if(j!=body.header.length-1)
+    //         {
+    //           query+=",";
+    //         }
+    //         else{
+    //           query+=")";
+    //         }
+    //       }
+    //       query+=",";
+    //       }
+          
+    //       }
+    //       query = query.substring(0, query.length - 1);
+    //         query+=";";
+// console.log(query);
+
+//     sequelize.query(query, { type: sequelize.QueryTypes.INSERT})
+//     .then(function(columns) {
+//       res.end(columns);
+//     })
+    // console.log(sequelize.Model.data.name);
+    console.log("qsuccess");
+    res.end("qsuccess");
   }).catch((err) => {
     res.end("qerror");
   })

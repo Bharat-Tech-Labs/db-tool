@@ -5,8 +5,34 @@
     <v-btn color="primary" @click="map()">Map</v-btn>
     <!-- <v-btn @click="createTableDialog=true" color="primary">Create</v-btn> -->
     <v-btn @click="getTables()" color="primary">Tables</v-btn>
-    <v-select :items="tables" label="Tables" outlined v-model="selectedTable" @change="getColums()"></v-select>
-    <v-data-table :headers="headers" :items="fileHeader" v-if="mapHeader">
+    <v-select
+      :items="tables"
+      label="Tables"
+      outlined
+      v-model="selectedTable"
+      @change="getColums()"
+    ></v-select>
+    <v-data-table
+      v-model="selectedHeader"
+      :headers="headers"
+      :items="fileHeader"
+      v-if="mapHeader"
+      item-key="name"
+      show-select
+    >
+      <!-- <template v-slot:body="{ items }">
+        <tbody>
+          <tr v-for="item in items" :key="item.name">
+            <td>
+              <v-checkbox v-model="selectedHeader" :value="item.newName" hide-details />
+            </td>
+            <td>{{ item.name }}</td>
+            <td>
+              <v-select :items="tableColumn" v-model="item.newName" outlined></v-select>
+            </td>
+          </tr>
+        </tbody>
+      </template>-->
       <template v-slot:item.newName="{ item }">
         <v-select :items="tableColumn" v-model="item.newName" outlined></v-select>
       </template>
@@ -82,6 +108,9 @@ export default {
 
   data() {
     return {
+      insertErrorData:[],
+      parsingErrorData: [],
+      selectedHeader: [],
       selectedValue: [],
       tableColumn: [],
       selectedTable: "",
@@ -90,7 +119,7 @@ export default {
       queryColumn: [],
       // createTableDialog: false,
       // dataType: ["VARCHAR", "DATE", "Integer"],
-      fileInput: null,
+      fileInput: [],
       fileHeader: [],
       // fileDataType: [],
       newHeader: [],
@@ -159,7 +188,8 @@ export default {
       for (let i = 0; i < h.data.length; i++) {
         const object = new Object({
           name: h.data[i],
-          newName: ""
+          newName: "",
+          checked: true
           // datatype: "VARCHAR"
         });
         // console.log(object);
@@ -239,16 +269,66 @@ export default {
       this.getHeader(this.header);
       this.mapHeader = true;
     },
-    async insertRow(data) {
-      console.log(data);
+    errorResolving(data,insertErrorDataCollector) {
+      // console.log(data);
+      for (let i = 0; i < data.data.length; i++) {
+        const table = {
+          name: data.name,
+          data: data.data[i]
+        };
+        
+        request.post(
+          {
+            url: "http://127.0.0.1:8082/singleInsert",
+            form: encodeURIComponent(JSON.stringify(table))
+          },
+          function(error, response, body) {
+            // console.log("query");
+            if (!error && response.statusCode == 200) {
+              if (body == "error") {
+               insertErrorDataCollector(table.data);
+              }
+              // console.log(body);
+            } else {
+              console.log(error);
+              console.log(response);
+            }
+          }
+        );
+      }
+      console.log("insertErrorData:",this.insertErrorData);
+    },
+    insertRow(data) {
+      // console.log(data);
+      // console.log(this.fileHeader);
+      const keys = [];
+      for (let i = 0; i < this.selectedHeader.length; i++) {
+        keys.push(this.selectedHeader[i].newName);
+      }
+      const selectedData = [];
+      for (let i = 0; i < data.length; i++) {
+        // if(data[i].length==this.fileHeader.length){
+        const newData = {};
+        let key;
+        let count = 0;
+        for (key in data[i]) {
+          count++;
+          if (keys.includes(key)) newData[key] = data[i][key];
+        }
+        if (count == this.fileHeader.length) {
+          selectedData.push(newData);
+        } else {
+          console.log(i, data[i]);
+        }
+      }
+      // console.log(selectedData);
       //       let query="INSERT INTO "+this.selectedTable+" (";
       //       for(let i=0;i<this.fileHeader.length;i++)
-      //       {
-      //         query+=this.fileHeader[i].newName;
-      //         if(i!=this.fileHeader.length-1)
-      //         {
-      //           query+=",";
-      //         }
+      //       {const table = {
+      // name: this.selectedTable,
+      // header: header,
+      // data: selectedData
+      // };
       //         else{
       //           query+=") VALUES";
       //         }
@@ -292,11 +372,11 @@ export default {
       //   )
       //     header.push(this.fileHeader[i].newName);
       // }
-      console.log(this.selectedTable);
+      // console.log(this.selectedTable);
       const table = {
         name: this.selectedTable,
         // header: header,
-        data: data
+        data: selectedData
       };
       // table.name = this.tableName;
       // const createHeader = {};
@@ -314,71 +394,159 @@ export default {
       // console.log(createHeader);
       // console.log(query);
       // const body={table:this.selectedTable,data:data};
-      await request.post(
-        {
-          url: "http://127.0.0.1:8082/insert",
-          form: encodeURIComponent(JSON.stringify(table))
-        },
-        function(error, response, body) {
-          console.log("query");
-          if (!error && response.statusCode == 200) {
-            console.log("success");
-          } else {
-            console.log(error);
-            console.log(response);
+      return new Promise((resolve, reject) => {
+        const errorResolving = this.errorResolving;
+        const insertErrorDataCollector=this.insertErrorDataCollector;
+        request.post(
+          {
+            url: "http://127.0.0.1:8082/bulkInsert",
+            form: encodeURIComponent(JSON.stringify(table))
+          },
+          function(error, response, body) {
+            // console.log("query");
+            if (!error && response.statusCode == 200) {
+              if (body == "error") {
+                errorResolving(table,insertErrorDataCollector);
+                console.log(table);
+              }
+              console.log(body);
+            } else {
+              console.log(error);
+              console.log(response);
+            }
+            resolve(body);
           }
-        }
-      );
+        );
+      });
     },
+
     parse() {
-      // let body={
-      //   file:this.fileInput,
-      //   data
-      // };
-      // await request.post(
-      //   {
-      //     url: "http://127.0.0.1:8082/insert",
-      //     form: encodeURIComponent(JSON.stringify(table))
-      //   },
-      //   function(error, response, body) {
-      //     console.log("query");
-      //     if (!error && response.statusCode == 200) {
-      //       console.log("success");
-      //     } else {
-      //       console.log(error);
-      //       console.log(response);
-      //     }
-      //   }
-      // );
-      // console.log(this.fileHeader);
-      this.parseChunk(this.insertRow, this.fileHeader);
+      //       console.log(this.fileInput);
+      //       const fileObject = this.fileInput;
+      // //       const fileObject  = {
+      // //    'lastModified'     : this.fileInput.lastModified,
+      // //    'lastModifiedDate' : this.fileInput.lastModifiedDate,
+      // //    'name'             : this.fileInput.name,
+      // //    'size'             : this.fileInput.size,
+      // //    'type'             : this.fileInput.type,
+      // //    'path':this.fileInput.path
+      // // };
+      //       const body={
+      //         file:fileObject,
+      //         header: this.fileHeader,
+      //         tableName: this.selectedTable
+      //       };
+      //       console.log(body);
+      //       await request.post(
+      //         {
+      //           url: "http://127.0.0.1:8082/insert",
+      //           form: body
+      //         },
+      //         function(error, response, body) {
+      //           console.log("query");
+      //           if (!error && response.statusCode == 200) {
+      //             console.log("success");
+      //           } else {
+      //             console.log(error);
+      //             console.log(response);
+      //           }
+      //         }
+      //       );
+      //       console.log(this.fileHeader);
+      this.errorData=[];
+      this.parseChunk(this.insertRow,this.errorDataCollector, this.fileHeader);
     },
-    parseChunk(callBack, header) {
+    errorDataCollector(data)
+    {
+      this.parsingErrorData.push(data);
+      
+    },
+    insertErrorDataCollector(data)
+    {
+      this.insertErrorData.push(data);
+    },
+    parseChunk(callBack,errorDataCollector, header) {
+      // let counter=0;
+      // let c=0;
+      let data = [];
       papa.parse(this.fileInput, {
         header: true,
         transformHeader: function(h, index) {
           for (let i = 0; i < header.length; i++) {
-            if (header[i].name == h) {
+            if (header[i].name == h && header[i].newName != "") {
               return header[i].newName;
             }
           }
+          return h;
         },
         dynamicTyping: true,
-        chunkSize: 1024 * 1024 * 10,
-        chunk: function(result) {
-          console.log(result);
-          const h = result.data;
-          // console.log(h);
-          // h = JSON.stringify(h);
-          // console.log(h);
-          // console.log(JSON.parse(h));
-          callBack(h);
+        step: async function(result, parser) {
+          // console.log(result.errors);
+          if(result.errors.length){
+            errorDataCollector(result.data);
+          }
+          else{
+          if (data.length < 10000) {
+            if (result.data.__parsed_extra) {
+              console.log(result.data.__parsed_extra);
+            } else {
+              data.push(result.data);
+            }
+            // c++;
+            // // console.log(data);
+            // counter++;
+          }
+          if (data.length == 10000) {
+            // console.log(data);
+            parser.pause();
+
+            // console.log(data.length);
+            const re = await callBack(data);
+            data = [];
+            if (re) {
+              // console.log("re",counter,re);
+              parser.resume();
+
+              // counter=0;
+            }
+          }}
+
           // console.log(result);
         },
         complete: function(results, file) {
           // console.log("compelete");
+          if (data.length) {
+            // console.log(data.length);
+            callBack(data);
+          }
         }
       });
+      console.log("parsingErrorData",this.parsingErrorData);
+      // papa.parse(this.fileInput, {
+      //   header: true,
+      //   transformHeader: function(h, index) {
+      //     for (let i = 0; i < header.length; i++) {
+      //       if (header[i].name == h) {
+      //         return header[i].newName;
+      //       }
+      //     }
+      //   },
+      //   dynamicTyping: true,
+      //   chunkSize: 1024 * 1024,
+      //   chunk: function(result) {
+      //     console.log(result);
+      //     const h = result.data;
+      //     // console.log(h);
+      //     // h = JSON.stringify(h);
+      //     // console.log(h);
+      //     // console.log(JSON.parse(h));
+      //     callBack(h);
+      //     // console.log(result);
+      //   },
+      //   complete: function(results, file) {
+      //     // console.log("compelete");
+      //   }
+      // });
     },
     getTableName(body) {
       this.tables = [];
@@ -393,6 +561,8 @@ export default {
       this.getTname(this.getTableName);
     },
     async getTname(callBack) {
+      // console.log(papa);
+
       await request.post(
         {
           url: "http://127.0.0.1:8082/table"
