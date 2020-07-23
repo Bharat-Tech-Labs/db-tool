@@ -310,16 +310,16 @@ export default {
         // if(data[i].length==this.fileHeader.length){
         const newData = {};
         let key;
-        let count = 0;
+        // let count = 0;
         for (key in data[i]) {
-          count++;
+          // count++;
           if (keys.includes(key)) newData[key] = data[i][key];
         }
-        if (count == this.fileHeader.length) {
+        // if (count == this.fileHeader.length) {
           selectedData.push(newData);
-        } else {
-          console.log(i, data[i]);
-        }
+        // } else {
+        //   console.log(i, data[i]);
+        // }
       }
       // console.log(selectedData);
       //       let query="INSERT INTO "+this.selectedTable+" (";

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const bodyParser = require('body-parser');
-const papa = require("papaparse");
+// const papa = require("papaparse");
 const express = require('express');
-const { Sequelize , DataTypes ,Model} = require('sequelize');
+const { Sequelize } = require('sequelize');
 const pg = require('pg');
-const { cat } = require('shelljs');
+// const { cat } = require('shelljs');
 const app = express();
 // app.use(bodyParser.json({limit: '500mb', extended: true}));
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: false, parameterLimit: 1000000 }));
@@ -30,6 +30,7 @@ app.post('/connect', function (req, res, next) {
   sequelize = new Sequelize(body.dbname, body.userName, body.userPassword, {
     dialectModule: pg,
     pool: { idle: 5000000 },
+    logging: false,
     dialect: 'postgres'
   });
   // console.log(sequelize);
