@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ limit: '500mb', extended: false, parameterLimit:
 // app.use(bodyParser.urlencoded({extended: true}));
 let sequelize;
 app.post('/connect', function (req, res, next) {
-  console.log('connect');
+  // console.log('connect');
   res.statusCode = 200;
   res.writeHead(200, {
     "Access-Control-Allow-Origin": "*",
@@ -34,17 +34,17 @@ app.post('/connect', function (req, res, next) {
   });
   // console.log(sequelize);
   sequelize.authenticate().then(() => {
-    console.log("success");
+    // console.log("success");
     res.end("success");
   }).catch((err) => {
-    console.log("error");
+    // console.log("error");
     res.end("error");
   })
 });
 
 
 app.post('/createTable',function (req, res, next) {
-  console.log('createTable');
+  // console.log('createTable');
   let key;
   let query;
   for (key in req.body) {
@@ -52,7 +52,7 @@ app.post('/createTable',function (req, res, next) {
     // console.log(JSON.parse(key));
     query=JSON.parse(key);
   }
-  console.log(query);
+  // console.log(query);
   res.writeHead(200, {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
@@ -65,10 +65,10 @@ app.post('/createTable',function (req, res, next) {
   //     query.headers[key].type=DataTypes.STRING;
   //   }
   // }
-  console.log(query);
+  // console.log(query);
   res.statusCode = 200;
   sequelize.authenticate().then(() => {
-    console.log("Success!");
+    // console.log("Success!");
     sequelize.query(query, { type: sequelize.QueryTypes.CREATE})
     .then(function(table) {
       // table.sync();
@@ -112,7 +112,7 @@ app.post('/table', function (req, res, next) {
     const query="SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';";
     sequelize.query(query, { type: sequelize.QueryTypes.SELECT})
   .then(function(table) {
-    console.log(JSON.stringify(table));
+    // console.log(JSON.stringify(table));
     res.end(JSON.stringify(table));
     // We don't need spread here, since only the results will be returned for select queries
   })
@@ -139,11 +139,11 @@ app.post('/tableColumn', function (req, res, next) {
     // console.log(JSON.parse(key));
     tableName=JSON.parse(key);
   }
-  console.log(tableName);
+  // console.log(tableName);
     const query="SELECT column_name FROM information_schema.columns WHERE TABLE_NAME = '"+tableName+"';";
     sequelize.query(query, { type: sequelize.QueryTypes.SELECT})
   .then(function(columns) {
-    console.log(JSON.stringify(columns));
+    // console.log(JSON.stringify(columns));
     res.write(JSON.stringify(columns));  
     res.end();
   })
@@ -167,7 +167,7 @@ app.post('/singleInsert', function (req, res, next) {
   res.statusCode = 200;
   sequelize.authenticate().then(() => {
     try{
-      console.log(body.name,body.data);
+      // console.log(body.name,body.data);
     const queryInterface = sequelize.getQueryInterface();
     const result=queryInterface.bulkInsert(body.name,data );
     // console.log(result);
@@ -226,7 +226,7 @@ app.post('/bulkInsert', function (req, res, next) {
   res.statusCode = 200;
   sequelize.authenticate().then(() => {
     try{
-      console.log(body.name,body.data);
+      // console.log(body.name,body.data);
     const queryInterface = sequelize.getQueryInterface();
     const result=queryInterface.bulkInsert(body.name,body.data );
     res.write("success");
@@ -264,3 +264,14 @@ app.post('/bulkInsert', function (req, res, next) {
 });
 
 app.listen(8082, 'localhost');
+// // const electron = require("electron");
+//   const proc = require("child_process");
+//   proc.exec("yarn electron",{maxBuffer: 1024 * 1024 * 1024 * 2},(error, stdout, stderr) => {
+//     if (error) {
+//       console.error(`exec error: ${error}`);
+//       return;
+//     }
+//     console.log(`stdout: ${stdout}`);
+//     console.error(`stderr: ${stderr}`);
+//   });
+  
