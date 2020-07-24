@@ -551,7 +551,7 @@ export default {
     getTableName(body) {
       this.tables = [];
       for (let i = 0; i < body.length; i++) {
-        console.log(body[i][0].toString());
+        // console.log(body[i][0].toString());
         this.tables.push(body[i][0].toString());
       }
 
@@ -568,7 +568,7 @@ export default {
           url: "http://127.0.0.1:8082/table"
         },
         function(error, response, body) {
-          console.log("query");
+          // console.log("query");
           if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
             callBack(body);

@@ -28,7 +28,7 @@
           >Cancle</v-btn>
 
           <v-btn color="primary" @click="connectDB()">Connect</v-btn>
-          <v-btn color="primary" @click="test()">Test</v-btn>
+          <!-- <v-btn color="primary" @click="test()">Test</v-btn> -->
           <v-dialog v-model="connectionError">
             <v-card>
               <v-card-text>Connection is not step</v-card-text>
@@ -105,7 +105,7 @@
 
 <script>
 import request from "request";
-import papa from "papaparse";
+// import papa from "papaparse";
 import Table from "./Table.vue";
 import CreateTable from "./CreateTable.vue";
 export default {
@@ -174,27 +174,27 @@ components: {
     // change() {
     //   console.log(this.newHeader);
     // },
-    header(h) {
-      for (let i = 0; i < h.data.length; i++) {
-        const object = new Object({ name: h.data[i] });
-        // console.log(object);
-        this.fileHeader.push(object);
-      }
-      console.log("ok", this.fileHeader);
-    },
-    getHeader(callBack) {
-      papa.parse(this.fileInput, {
-        // header:true,
-        // transformHeader: function(header,index) {
-        //   console.log("header",header);
-        // },
-        step: function(result, parser) {
-          const h = result;
-          callBack(h);
-          parser.abort();
-        }
-      });
-    },
+    // header(h) {
+    //   for (let i = 0; i < h.data.length; i++) {
+    //     const object = new Object({ name: h.data[i] });
+    //     // console.log(object);
+    //     this.fileHeader.push(object);
+    //   }
+    //   console.log("ok", this.fileHeader);
+    // },
+    // getHeader(callBack) {
+    //   papa.parse(this.fileInput, {
+    //     // header:true,
+    //     // transformHeader: function(header,index) {
+    //     //   console.log("header",header);
+    //     // },
+    //     step: function(result, parser) {
+    //       const h = result;
+    //       callBack(h);
+    //       parser.abort();
+    //     }
+    //   });
+    // },
     // dataType(h){
     //   console.log(h.data);
     //   let key;
@@ -222,11 +222,11 @@ components: {
     //     }
     //   });
     // },
-    parse() {
-      this.parseChunk(this.insertRow);
-    },
-    parseChunk(callBack) {
-      this.getHeader(this.header);
+    // parse() {
+    //   this.parseChunk(this.insertRow);
+    // },
+    // parseChunk(callBack) {
+    //   this.getHeader(this.header);
       // this.getHeaderDataType(this.dataType);
       // papa.parse(this.fileInput, {
       //   header: true,
@@ -245,26 +245,26 @@ components: {
       //     // console.log("compelete");
       //   }
       // });
-    },
-    async insertRow(h) {
+    // },
+    // async insertRow(h) {
       // console.log(JSON.stringify(h).length);
 
-      await request.post(
-        {
-          url: "http://127.0.0.1:8082/query",
-          form: h
-        },
-        function(error, response, body) {
-          console.log("query");
-          if (!error && response.statusCode == 200) {
-            console.log(body);
-          } else {
-            console.log(error);
-            console.log(response);
-          }
-        }
-      );
-    },
+    //   await request.post(
+    //     {
+    //       url: "http://127.0.0.1:8082/query",
+    //       form: h
+    //     },
+    //     function(error, response, body) {
+    //       console.log("query");
+    //       if (!error && response.statusCode == 200) {
+    //         console.log(body);
+    //       } else {
+    //         console.log(error);
+    //         console.log(response);
+    //       }
+    //     }
+    //   );
+    // },
     async connectDB() {
       await request.post(
         {

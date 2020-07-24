@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "productName": "app",
+  "name": "db-query-tool",
+  "productName": "db-query-tool",
   "version": "0.1.0",
   "private": true,
   "description":"description",
