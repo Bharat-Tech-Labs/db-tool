@@ -20,7 +20,7 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload:'/home/ubuntu/db-query-tool/server.js',
+      preload:__dirname+ '/server.js',
       nodeIntegration:true
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

@@ -153,8 +153,9 @@ export default {
   },
   methods: {
     print() {
-      console.log(this.fileHeader);
-      console.log(this.selectedValue);
+      console.log(this.fileInput.size)
+      // console.log(this.fileHeader);
+      // console.log(this.selectedValue);
     },
     // editItem(item) {
     //   this.editedIndex = this.fileHeader.indexOf(item);
