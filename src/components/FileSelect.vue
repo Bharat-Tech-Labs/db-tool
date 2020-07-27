@@ -6,6 +6,8 @@
         <v-card-title class="headline">Connection</v-card-title>
 
         <v-card-text>
+          <v-text-field v-model="host" label="Host" required></v-text-field>
+          <v-text-field v-model="port" label="Port" required></v-text-field>
           <v-text-field v-model="dbname" label="DB Name" required></v-text-field>
           <v-text-field v-model="userName" label="User Name" required></v-text-field>
           <v-text-field
@@ -117,6 +119,8 @@ components: {
 
   data() {
     return {
+      host:'localhost',
+      port:'5432',
             dbname: "psqldb",
       userName: "admin",
       userPassword: "qwedsa",
@@ -272,7 +276,9 @@ components: {
           form: JSON.stringify({
             dbname: this.dbname,
             userName: this.userName,
-            userPassword: this.userPassword
+            userPassword: this.userPassword,
+            host:this.host,
+            port:this.port
           })
         },
         function(error, response, body) {

@@ -34,7 +34,9 @@ app.post('/connect', function (req, res, next) {
     dialectModule: pg,
     pool: { idle: 5000000 },
     logging: false,
-    dialect: 'postgres'
+    dialect: 'postgres',
+    host: body.host,
+    port: body.port
   });
   // console.log(sequelize);
   sequelize.authenticate().then(() => {
