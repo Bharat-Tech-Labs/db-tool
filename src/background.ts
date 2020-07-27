@@ -3,6 +3,7 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import path from 'path';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -20,7 +21,7 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload:__dirname+ '/server.js',
+      preload:(process.platform === "win32") ? path.join(__dirname,'\\preload.js') :path.join(__dirname, '/preload.js'),
       nodeIntegration:true
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
