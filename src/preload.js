@@ -1,4 +1,4 @@
-window.onload = () => {
+// window.onload = () => {
 /* eslint-disable @typescript-eslint/no-var-requires */
 console.log("OK");
 const bodyParser = require('body-parser');
@@ -279,4 +279,4 @@ app.listen(8082, 'localhost');
 //     console.log(`stdout: ${stdout}`);
 //     console.error(`stderr: ${stderr}`);
 //   });
-};
+// };
