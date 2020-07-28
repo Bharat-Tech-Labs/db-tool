@@ -1,11 +1,23 @@
 <template>
   <div>
     <v-btn color="primary" @click="connectionDialog = true">Connect</v-btn>
+    <CheckDiskSpace/>
     <v-dialog v-model="connectionDialog">
       <v-card>
         <v-card-title class="headline">Connection</v-card-title>
 
         <v-card-text>
+          <v-text-field v-model="sshHost" label="SSH Host" required></v-text-field>
+          <v-text-field v-model="sshPort" label="SSH Port" required></v-text-field>
+          <v-text-field v-model="sshUser" label="SSH User" required></v-text-field>
+          <v-text-field
+            v-model="sshPassword"
+            :append-icon="sshPasswordShow ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="sshPasswordShow ? 'text' : 'password'"
+            label="Password"
+            @click:append="sshPasswordShow = !sshPasswordShow"
+          ></v-text-field>
+          <v-file-input label="SSH Key" v-model="sshKey"></v-file-input>
           <v-text-field v-model="host" label="Host" required></v-text-field>
           <v-text-field v-model="port" label="Port" required></v-text-field>
           <v-text-field v-model="dbname" label="DB Name" required></v-text-field>
@@ -110,20 +122,28 @@ import request from "request";
 // import papa from "papaparse";
 import Table from "./Table.vue";
 import CreateTable from "./CreateTable.vue";
+import CheckDiskSpace from "./CheckDiskSpace.vue";
 export default {
   name: "FileSelect",
 components: {
     Table,
     CreateTable,
+    CheckDiskSpace
   },
 
   data() {
     return {
+      sshPasswordShow:false,
+      sshHost:"internal.bharattechlabs.com",
+      sshPort:"22",
+      sshUser:"ubuntu",
+      sshKey:[],
+      sshPassword:'',
       host:'localhost',
       port:'5432',
-            dbname: "psqldb",
-      userName: "admin",
-      userPassword: "qwedsa",
+            dbname: "brijesh",
+      userName: "brijesh",
+      userPassword: "brijesh",
       passwordShow: false,
       connectionDialog: false,
       connectionError: false,
@@ -270,6 +290,12 @@ components: {
     //   );
     // },
     async connectDB() {
+      // console.log(typeof this.sshKey.path);
+      let sshKeyPath='';
+      if(this.sshPassword==='')
+{
+  sshKeyPath=this.sshKey.path;
+}
       await request.post(
         {
           url: "http://127.0.0.1:8082/connect",
@@ -278,7 +304,12 @@ components: {
             userName: this.userName,
             userPassword: this.userPassword,
             host:this.host,
-            port:this.port
+            port:this.port,
+            sshHost:this.sshHost,
+            sshPort:this.sshPort,
+            sshUser:this.sshUser,
+            sshKey:sshKeyPath,
+            sshPassword:this.sshPassword
           })
         },
         function(error, response, body) {

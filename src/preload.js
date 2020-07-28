@@ -5,15 +5,32 @@ const bodyParser = require('body-parser');
 // // const papa = require("papaparse");
 const express = require('express');
 const { Sequelize } = require('sequelize');
+const ssh2 = require('ssh2');
 const pg = require('pg');
-// const { table } = require('console');
-// // const { cat } = require('shelljs');
 const app = express();
-// app.use(bodyParser.json({limit: '500mb', extended: true}));
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: false, parameterLimit: 1000000 }));
-// app.use(bodyParser.json({limit: '50mb', extended: true}));
-// app.use(bodyParser.urlencoded({extended: true}));
+
 let sequelize;
+// const c = new ssh2();
+// const pgHost = 'localhost'; // remote hostname/ip
+//  let pgPort = 5432;
+// //  const proxyPort = 9090;
+//   let ready = false;
+
+// const proxy = require('net').createServer(function(sock) {
+// if (!ready)
+//   return sock.destroy();
+// c.forwardOut(sock.remoteAddress, sock.remotePort, pgHost, pgPort, function(err, stream) {
+//   if (err)
+//     return sock.destroy();
+//   sock.pipe(stream);
+//   stream.pipe(sock);
+// });
+// });
+// proxy.listen(0, '127.0.0.1');
+
+
+
 app.post('/connect', function (req, res, next) {
   console.log('connect');
   res.statusCode = 200;
@@ -41,12 +58,106 @@ app.post('/connect', function (req, res, next) {
   // console.log(sequelize);
   sequelize.authenticate().then(() => {
     // console.log("success");
+
     res.end("success");
   }).catch((err) => {
     // console.log("error");
     res.end("error");
   })
+
+//   pgPort=body.port;
+
+//   let privateKey;
+// if(body.sshPassword==='')
+// {
+//   privateKey=require('fs').readFileSync(body.sshKey)
+// }
+// c.connect({
+// host : body.sshHost,
+// port : body.sshPort,
+// username : body.sshUser,
+// privateKey : privateKey,
+// password:body.sshPassword
+// });
+// c.on('connect', function() {
+// console.log('Connection :: connect');
+// });
+// c.on('ready', function() {
+// ready = true;
+
+// sequelize = new Sequelize(body.dbname, body.userName, body.userPassword, {
+//     dialectModule: pg,
+//     pool: { idle: 5000000 },
+//     logging: false,
+//     dialect: 'postgres',
+//     host: body.host,
+//     port: proxy.address().port
+//   });
+//   // console.log(sequelize);
+//   sequelize.authenticate().then(() => {
+//     // console.log("success");
+//     res.end("success");
+//   }).catch((err) => {
+//     // console.log("error");
+//     res.end("error");
+//   })
+// });
 });
+
+
+app.post('/checkDiskSpace', function (req, res, next) {
+  console.log('checkDiskSpace');
+  res.statusCode = 200;
+  res.writeHead(200, {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  });
+
+  let key;
+  let body;
+  for (key in req.body) {
+    body = JSON.parse(key);
+  }
+
+  let privateKey;
+if(body.sshPassword==='')
+{
+  privateKey=require('fs').readFileSync(body.sshKey)
+}
+  const conn=new ssh2.Client();
+  conn.on('ready', function() {
+    // console.log('Client :: ready');
+    
+    conn.exec('df -h', function(err, stream) {
+      // console.log(stream);
+      if (err) throw err;
+      let resData="";
+      stream.on('close', function(code, signal) {
+        res.end(resData);
+        // console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
+        conn.end();
+      }).on('data', function(data) {
+        resData+=data;
+        // console.log('STDOUT: ' + data);
+        
+        // res.write(data);
+      }).stderr.on('data', function(data) {
+        console.log('STDERR: ' + data);
+      });
+    });
+  }).on('error', function(err) {
+    console.log("Connection not Established");
+    res.end(err);
+  }).connect({
+    host : body.sshHost,
+    port : body.sshPort,
+    username : body.sshUser,
+    privateKey : privateKey,
+    password:body.sshPassword
+    });
+  
+});
+
 
 
 app.post('/createTable',function (req, res, next) {
