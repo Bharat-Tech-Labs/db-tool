@@ -1,19 +1,6 @@
 'use strict'
 // require('update-electron-app')()
 import { autoUpdater } from "electron-updater"
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
-  }
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-  })
-})
 import { app, protocol, BrowserWindow, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
@@ -81,7 +68,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -92,6 +79,70 @@ app.on('ready', async () => {
   }
   createWindow()
 })
+autoUpdater.on('checking-for-update', () => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Ok'],
+    title: 'Application Update',
+    message: 'Checking for updates',
+    }
+
+  dialog.showMessageBox(dialogOpts);
+  })
+  autoUpdater.on('update-available', (info) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Ok'],
+      title: 'Application Update',
+      message: 'Update Available',
+      }
+  
+    dialog.showMessageBox(dialogOpts);
+  })
+  autoUpdater.on('update-not-available', (info) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Ok'],
+      title: 'Application Update',
+      message: 'Update not Available',
+      }
+  
+    dialog.showMessageBox(dialogOpts);
+  })
+  autoUpdater.on('error', (err) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Ok'],
+      title: 'Application Update',
+      message: 'Error',
+      }
+  
+    dialog.showMessageBox(dialogOpts);
+  })
+  autoUpdater.on('download-progress', (progressObj) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Ok'],
+      title: 'Application Update',
+      message: 'Download in Progress',
+      }
+  
+    dialog.showMessageBox(dialogOpts);
+  })
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
