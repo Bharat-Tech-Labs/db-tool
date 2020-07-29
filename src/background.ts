@@ -1,8 +1,20 @@
 'use strict'
 // require('update-electron-app')()
 import { autoUpdater } from "electron-updater"
-autoUpdater.checkForUpdatesAndNotify()
-import { app, protocol, BrowserWindow } from 'electron'
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+import { app, protocol, BrowserWindow, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path';
@@ -69,6 +81,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  autoUpdater.checkForUpdatesAndNotify();
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
