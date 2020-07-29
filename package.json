@@ -1,9 +1,9 @@
 {
   "name": "db-query-tool",
   "productName": "db-query-tool",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "description",
+  "description": "updated description",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
