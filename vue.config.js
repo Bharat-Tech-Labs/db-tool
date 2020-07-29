@@ -9,7 +9,7 @@ module.exports = {
         "publish": [{
         "provider": "github",
         "owner": "Bharat-Tech-Labs",
-        "repo": "db-query-tool"
+        "repo": "db-tool"
     }]
         // "asar": "false",
         // "extraResources": [
