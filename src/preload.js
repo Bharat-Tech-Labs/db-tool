@@ -213,7 +213,7 @@ app.post('/createTable',function (req, res, next) {
   //     console.log(err);
   //   }
   }).catch((err) => {
-    res.end("qerror");
+    res.end("Connection Error");
   })
 });
 
@@ -234,7 +234,7 @@ app.post('/table', function (req, res, next) {
     // We don't need spread here, since only the results will be returned for select queries
   })
   }).catch((err) => {
-    res.end("qerror");
+    res.end("Connection Error");
   })
 });
 
@@ -265,7 +265,7 @@ app.post('/tableColumn', function (req, res, next) {
     res.end();
   })
   }).catch((err) => {
-    res.end("qerror");
+    res.end("Connection Error");
   })
 });
 
@@ -297,7 +297,7 @@ app.post('/singleInsert', function (req, res, next) {
       res.end();
     }   
   }).catch((err) => {
-    res.end("qerror");
+    res.end("Connection Error");
   })
 });
 
@@ -376,9 +376,33 @@ app.post('/bulkInsert', function (req, res, next) {
     // }).then(()=>{console.log("then")}).catch((er)=>{console.log(er)});
     
   }).catch((err) => {
-    res.end("qerror");
+    res.end("Connection Error");
   })
 });
+
+app.post('/pipeline',function (req, res, next) {
+  let key;
+  let query;
+  for (key in req.body) {
+    query=JSON.parse(key);
+  }
+  res.writeHead(200, {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  });
+  res.statusCode = 200;
+  console.log(query)
+  sequelize.authenticate().then(() => {
+    sequelize.query(query, { type: sequelize.QueryTypes.CREATE})
+    .then(function(result) {
+      res.end("success");
+    })
+  }).catch((err) => {
+    res.end("Connection Error");
+  })
+});
+
+
 
 console.log("listening");
 app.listen(8082, 'localhost');

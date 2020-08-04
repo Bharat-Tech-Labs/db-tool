@@ -114,7 +114,7 @@
         </v-card-actions>
       </v-card> -->
     <!-- </v-dialog> -->
-    <FlowChart/>
+    <ProcessPipeline/>
   </div>
 </template>
 
@@ -124,14 +124,14 @@ import request from "request";
 import Table from "./Table.vue";
 import CreateTable from "./CreateTable.vue";
 import CheckDiskSpace from "./CheckDiskSpace.vue";
-import FlowChart from "./FlowChart.vue";
+import ProcessPipeline from "./ProcessPipeline.vue";
 export default {
   name: "FileSelect",
 components: {
     Table,
     CreateTable,
     CheckDiskSpace,
-    FlowChart
+    ProcessPipeline
   },
 
   data() {
