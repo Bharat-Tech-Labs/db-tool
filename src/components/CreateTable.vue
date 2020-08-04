@@ -115,7 +115,8 @@ export default {
         name: "",
         datatype: "",
         unique:false,
-        notNull:false
+        notNull:false,
+        editedIndex:-1
       },
       headers: [
         { text: "Header", value: "name" },

@@ -114,6 +114,7 @@
         </v-card-actions>
       </v-card> -->
     <!-- </v-dialog> -->
+    <FlowChart/>
   </div>
 </template>
 
@@ -123,12 +124,14 @@ import request from "request";
 import Table from "./Table.vue";
 import CreateTable from "./CreateTable.vue";
 import CheckDiskSpace from "./CheckDiskSpace.vue";
+import FlowChart from "./FlowChart.vue";
 export default {
   name: "FileSelect",
 components: {
     Table,
     CreateTable,
-    CheckDiskSpace
+    CheckDiskSpace,
+    FlowChart
   },
 
   data() {
