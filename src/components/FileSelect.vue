@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn color="primary" @click="connectionDialog = true">Connect</v-btn>
-    <CheckDiskSpace/>
+    <CheckDiskSpace />
     <v-dialog v-model="connectionDialog">
       <v-card>
         <v-card-title class="headline">Connection</v-card-title>
@@ -43,19 +43,19 @@
 
           <v-btn color="primary" @click="connectDB()">Connect</v-btn>
           <!-- <v-btn color="primary" @click="test()">Test</v-btn> -->
-          <v-dialog v-model="connectionError">
+          <!-- <v-dialog v-model="connectionError">
             <v-card>
               <v-card-text>Connection is not step</v-card-text>
               <v-card-actions>
                 <v-btn color="primary" @click="connectionError=false">Ok</v-btn>
               </v-card-actions>
             </v-card>
-          </v-dialog>
+          </v-dialog>-->
         </v-card-actions>
       </v-card>
     </v-dialog>
-<Table/>
-<CreateTable/>
+    <Table />
+    <CreateTable />
     <!-- <v-file-input accept=".csv" label="File input" v-model="fileInput"></v-file-input> -->
     <!-- <v-btn color="primary" @click="parse()">Parse</v-btn>
     <v-btn @click="createTableDialog=true" color="primary">Create</v-btn>
@@ -98,23 +98,23 @@
               </v-toolbar>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-btn @click="editItem(item)" color="primary">c</v-btn> -->
-              <!-- <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon> -->
-              <!-- <v-icon small @click="deleteItem(item)">mdi-delete</v-icon> -->
-            <!-- </template> -->
-          <!-- </v-data-table> -->
-        <!-- </v-card-text> -->
-<!--  -->
-        <!-- <v-card-actions> -->
-          <!-- <v-spacer></v-spacer>
+    <v-btn @click="editItem(item)" color="primary">c</v-btn>-->
+    <!-- <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon> -->
+    <!-- <v-icon small @click="deleteItem(item)">mdi-delete</v-icon> -->
+    <!-- </template> -->
+    <!-- </v-data-table> -->
+    <!-- </v-card-text> -->
+    <!--  -->
+    <!-- <v-card-actions> -->
+    <!-- <v-spacer></v-spacer>
 
           <v-btn color="primary" @click="createTableDialog = false">Cancle</v-btn>
 
           <v-btn color="primary" @click="createTable()">Create</v-btn>
         </v-card-actions>
-      </v-card> -->
+    </v-card>-->
     <!-- </v-dialog> -->
-    <ProcessPipeline/>
+    <ProcessPipeline />
   </div>
 </template>
 
@@ -127,29 +127,29 @@ import CheckDiskSpace from "./CheckDiskSpace.vue";
 import ProcessPipeline from "./ProcessPipeline.vue";
 export default {
   name: "FileSelect",
-components: {
+  components: {
     Table,
     CreateTable,
     CheckDiskSpace,
-    ProcessPipeline
+    ProcessPipeline,
   },
 
   data() {
     return {
-      sshPasswordShow:false,
-      sshHost:"internal.bharattechlabs.com",
-      sshPort:"22",
-      sshUser:"ubuntu",
-      sshKey:[],
-      sshPassword:'',
-      host:'localhost',
-      port:'5432',
-            dbname: "brijesh",
+      sshPasswordShow: false,
+      sshHost: "internal.bharattechlabs.com",
+      sshPort: "22",
+      sshUser: "ubuntu",
+      sshKey: [],
+      sshPassword: "",
+      host: "localhost",
+      port: "5432",
+      dbname: "brijesh",
       userName: "brijesh",
       userPassword: "brijesh",
       passwordShow: false,
       connectionDialog: false,
-      connectionError: false,
+      // connectionError: false,
       // fileInput: null,
       // fileHeader: [],
       // fileDataType: [],
@@ -254,27 +254,27 @@ components: {
     // },
     // parseChunk(callBack) {
     //   this.getHeader(this.header);
-      // this.getHeaderDataType(this.dataType);
-      // papa.parse(this.fileInput, {
-      //   header: true,
-      //   dynamicTyping: true,
-      //   chunkSize: 1024 * 1024 * 10,
-      //   chunk: function(result) {
-      //     let h = result.data;
-      //     console.log(h);
-      //     h = JSON.stringify(h);
-      //     console.log(h);
-      //     console.log(JSON.parse(h));
-      //     // callBack(h);
-      //     // console.log(result);
-      //   },
-      //   complete: function(results, file) {
-      //     // console.log("compelete");
-      //   }
-      // });
+    // this.getHeaderDataType(this.dataType);
+    // papa.parse(this.fileInput, {
+    //   header: true,
+    //   dynamicTyping: true,
+    //   chunkSize: 1024 * 1024 * 10,
+    //   chunk: function(result) {
+    //     let h = result.data;
+    //     console.log(h);
+    //     h = JSON.stringify(h);
+    //     console.log(h);
+    //     console.log(JSON.parse(h));
+    //     // callBack(h);
+    //     // console.log(result);
+    //   },
+    //   complete: function(results, file) {
+    //     // console.log("compelete");
+    //   }
+    // });
     // },
     // async insertRow(h) {
-      // console.log(JSON.stringify(h).length);
+    // console.log(JSON.stringify(h).length);
 
     //   await request.post(
     //     {
@@ -294,11 +294,10 @@ components: {
     // },
     async connectDB() {
       // console.log(typeof this.sshKey.path);
-      let sshKeyPath='';
-      if(this.sshPassword==='')
-{
-  sshKeyPath=this.sshKey.path;
-}
+      let sshKeyPath = "";
+      if (this.sshPassword === "") {
+        sshKeyPath = this.sshKey.path;
+      }
       await request.post(
         {
           url: "http://127.0.0.1:8082/connect",
@@ -306,30 +305,30 @@ components: {
             dbname: this.dbname,
             userName: this.userName,
             userPassword: this.userPassword,
-            host:this.host,
-            port:this.port,
-            sshHost:this.sshHost,
-            sshPort:this.sshPort,
-            sshUser:this.sshUser,
-            sshKey:sshKeyPath,
-            sshPassword:this.sshPassword
-          })
+            host: this.host,
+            port: this.port,
+            sshHost: this.sshHost,
+            sshPort: this.sshPort,
+            sshUser: this.sshUser,
+            sshKey: sshKeyPath,
+            sshPassword: this.sshPassword,
+          }),
         },
-        function(error, response, body) {
+        function (error, response, body) {
           if (!error && response.statusCode == 200) {
             console.log(body);
-            if (body === "success") {
-              this.connectionDialog = false;
-            } else {
-              this.connectionError = true;
-            }
+            // if (body === "success") {
+            //   this.connectionDialog = false;
+            // } else {
+            //   // this.connectionError = true;
+            // }
           } else {
             console.log(error);
             console.log(response);
           }
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>

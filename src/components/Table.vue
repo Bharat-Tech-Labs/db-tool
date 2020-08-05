@@ -5,13 +5,7 @@
     <v-btn color="primary" @click="map()">Map</v-btn>
     <!-- <v-btn @click="createTableDialog=true" color="primary">Create</v-btn> -->
     <v-btn @click="getTables()" color="primary">Tables</v-btn>
-    <v-select
-      :items="tables"
-      label="Tables"
-      outlined
-      v-model="selectedTable"
-      @change="getColums()"
-    ></v-select>
+    <v-select :items="tables" label="Tables" outlined v-model="selectedTable" @change="getColums()"></v-select>
     <v-data-table
       v-model="selectedHeader"
       :headers="headers"
@@ -108,7 +102,7 @@ export default {
 
   data() {
     return {
-      insertErrorData:[],
+      insertErrorData: [],
       parsingErrorData: [],
       selectedHeader: [],
       selectedValue: [],
@@ -132,28 +126,28 @@ export default {
       // },
       headers: [
         { text: "Header", value: "name" },
-        { text: "New Header Name", value: "newName" }
+        { text: "New Header Name", value: "newName" },
         // {
         //   text: "DataType",
         //   value: "datatype"
         // },
         // { text: "Actions", value: "actions" }
-      ]
+      ],
     };
   },
   computed: {
     computedItems() {
-      return this.tableColumn.map(item => {
+      return this.tableColumn.map((item) => {
         return {
           text: item,
-          disabled: this.tableColumn.includes(item)
+          disabled: this.tableColumn.includes(item),
         };
       });
-    }
+    },
   },
   methods: {
     print() {
-      console.log(this.fileInput.size)
+      console.log(this.fileInput.size);
       // console.log(this.fileHeader);
       // console.log(this.selectedValue);
     },
@@ -190,7 +184,7 @@ export default {
         const object = new Object({
           name: h.data[i],
           newName: "",
-          checked: true
+          checked: true,
           // datatype: "VARCHAR"
         });
         // console.log(object);
@@ -205,11 +199,11 @@ export default {
         //   return "ok";
         //   // console.log("header",header);
         // },
-        step: function(result, parser) {
+        step: function (result, parser) {
           const h = result;
           callBack(h);
           parser.abort();
-        }
+        },
       });
     },
     // async createTable() {
@@ -270,24 +264,24 @@ export default {
       this.getHeader(this.header);
       this.mapHeader = true;
     },
-    errorResolving(data,insertErrorDataCollector) {
+    errorResolving(data, insertErrorDataCollector) {
       // console.log(data);
       for (let i = 0; i < data.data.length; i++) {
         const table = {
           name: data.name,
-          data: data.data[i]
+          data: data.data[i],
         };
-        
+
         request.post(
           {
             url: "http://127.0.0.1:8082/singleInsert",
-            form: encodeURIComponent(JSON.stringify(table))
+            form: encodeURIComponent(JSON.stringify(table)),
           },
-          function(error, response, body) {
+          function (error, response, body) {
             // console.log("query");
             if (!error && response.statusCode == 200) {
               if (body == "error") {
-               insertErrorDataCollector(table.data);
+                insertErrorDataCollector(table.data);
               }
               // console.log(body);
             } else {
@@ -297,7 +291,7 @@ export default {
           }
         );
       }
-      console.log("insertErrorData:",this.insertErrorData);
+      console.log("insertErrorData:", this.insertErrorData);
     },
     insertRow(data) {
       // console.log(data);
@@ -317,7 +311,7 @@ export default {
           if (keys.includes(key)) newData[key] = data[i][key];
         }
         // if (count == this.fileHeader.length) {
-          selectedData.push(newData);
+        selectedData.push(newData);
         // } else {
         //   console.log(i, data[i]);
         // }
@@ -377,7 +371,7 @@ export default {
       const table = {
         name: this.selectedTable,
         // header: header,
-        data: selectedData
+        data: selectedData,
       };
       // table.name = this.tableName;
       // const createHeader = {};
@@ -397,17 +391,17 @@ export default {
       // const body={table:this.selectedTable,data:data};
       return new Promise((resolve, reject) => {
         const errorResolving = this.errorResolving;
-        const insertErrorDataCollector=this.insertErrorDataCollector;
+        const insertErrorDataCollector = this.insertErrorDataCollector;
         request.post(
           {
             url: "http://127.0.0.1:8082/bulkInsert",
-            form: encodeURIComponent(JSON.stringify(table))
+            form: encodeURIComponent(JSON.stringify(table)),
           },
-          function(error, response, body) {
+          function (error, response, body) {
             // console.log("query");
             if (!error && response.statusCode == 200) {
               if (body == "error") {
-                errorResolving(table,insertErrorDataCollector);
+                errorResolving(table, insertErrorDataCollector);
                 console.log(table);
               }
               console.log(body);
@@ -454,25 +448,22 @@ export default {
       //         }
       //       );
       //       console.log(this.fileHeader);
-      this.errorData=[];
-      this.parseChunk(this.insertRow,this.errorDataCollector, this.fileHeader);
+      this.errorData = [];
+      this.parseChunk(this.insertRow, this.errorDataCollector, this.fileHeader);
     },
-    errorDataCollector(data)
-    {
+    errorDataCollector(data) {
       this.parsingErrorData.push(data);
-      
     },
-    insertErrorDataCollector(data)
-    {
+    insertErrorDataCollector(data) {
       this.insertErrorData.push(data);
     },
-    parseChunk(callBack,errorDataCollector, header) {
+    parseChunk(callBack, errorDataCollector, header) {
       // let counter=0;
       // let c=0;
       let data = [];
       papa.parse(this.fileInput, {
         header: true,
-        transformHeader: function(h, index) {
+        transformHeader: function (h, index) {
           for (let i = 0; i < header.length; i++) {
             if (header[i].name == h && header[i].newName != "") {
               return header[i].newName;
@@ -481,48 +472,48 @@ export default {
           return h;
         },
         dynamicTyping: true,
-        step: async function(result, parser) {
+        step: async function (result, parser) {
           // console.log(result.errors);
-          if(result.errors.length){
+          if (result.errors.length) {
             errorDataCollector(result.data);
-          }
-          else{
-          if (data.length < 10000) {
-            if (result.data.__parsed_extra) {
-              console.log(result.data.__parsed_extra);
-            } else {
-              data.push(result.data);
+          } else {
+            if (data.length < 10000) {
+              if (result.data.__parsed_extra) {
+                console.log(result.data.__parsed_extra);
+              } else {
+                data.push(result.data);
+              }
+              // c++;
+              // // console.log(data);
+              // counter++;
             }
-            // c++;
-            // // console.log(data);
-            // counter++;
-          }
-          if (data.length == 10000) {
-            // console.log(data);
-            parser.pause();
+            if (data.length == 10000) {
+              // console.log(data);
+              parser.pause();
 
-            // console.log(data.length);
-            const re = await callBack(data);
-            data = [];
-            if (re) {
-              // console.log("re",counter,re);
-              parser.resume();
+              // console.log(data.length);
+              const re = await callBack(data);
+              data = [];
+              if (re) {
+                // console.log("re",counter,re);
+                parser.resume();
 
-              // counter=0;
+                // counter=0;
+              }
             }
-          }}
+          }
 
           // console.log(result);
         },
-        complete: function(results, file) {
+        complete: function (results, file) {
           // console.log("compelete");
           if (data.length) {
             // console.log(data.length);
             callBack(data);
           }
-        }
+        },
       });
-      console.log("parsingErrorData",this.parsingErrorData);
+      console.log("parsingErrorData", this.parsingErrorData);
       // papa.parse(this.fileInput, {
       //   header: true,
       //   transformHeader: function(h, index) {
@@ -566,9 +557,9 @@ export default {
 
       await request.post(
         {
-          url: "http://127.0.0.1:8082/table"
+          url: "http://127.0.0.1:8082/table",
         },
-        function(error, response, body) {
+        function (error, response, body) {
           // console.log("query");
           if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
@@ -601,9 +592,9 @@ export default {
       await request.post(
         {
           url: "http://127.0.0.1:8082/tableColumn",
-          form: JSON.stringify(this.selectedTable)
+          form: JSON.stringify(this.selectedTable),
         },
-        function(error, response, body) {
+        function (error, response, body) {
           console.log("query");
           if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
@@ -614,7 +605,7 @@ export default {
           }
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>

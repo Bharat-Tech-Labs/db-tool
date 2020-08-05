@@ -1,9 +1,8 @@
 <template>
   <div>
-    
     <v-btn @click="createTableDialog=true" color="primary">Create</v-btn>
     <div v-if="createTableDialog">
-    <!-- <v-dialog v-model="createTableDialog"> -->
+      <!-- <v-dialog v-model="createTableDialog"> -->
       <v-card>
         <v-card-title class="headline">Create Table</v-card-title>
 
@@ -24,7 +23,7 @@
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field v-model="editedItem.name" label="Header" readonly></v-text-field>
                           </v-col>
-                        </v-row> -->
+                        </v-row>-->
                         <v-row>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field v-model="editedItem.name" label="Header Name" required></v-text-field>
@@ -69,31 +68,24 @@
           <v-spacer></v-spacer>
 
           <v-btn color="primary" @click="createTableDialog = false">Cancle</v-btn>
-            <v-btn color="primary" @click="previewQuery()">Preview</v-btn>
-            <v-dialog
-      v-model="previewQueryDialog"
-    >
-      <v-card>
-        <v-card-title class="headline">Preview</v-card-title>
+          <v-btn color="primary" @click="previewQuery()">Preview</v-btn>
+          <v-dialog v-model="previewQueryDialog">
+            <v-card>
+              <v-card-title class="headline">Preview</v-card-title>
 
-        <v-textarea
-          v-model="createTableQuery"
-          :value="createTableQuery"
-        ></v-textarea>
+              <v-textarea v-model="createTableQuery" :value="createTableQuery"></v-textarea>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-            <v-btn color="primary" @click="previewQueryDialogBox = false">Cancle</v-btn>
-          <v-btn color="primary" @click="createTable()">Create</v-btn>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="previewQueryDialogBox = false">Cancle</v-btn>
+                <v-btn color="primary" @click="createTable()">Create</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-card-actions>
       </v-card>
-    </v-dialog>
-          
-        </v-card-actions>
-      </v-card>
-    <!-- </v-dialog> -->
+      <!-- </v-dialog> -->
     </div>
-
   </div>
 </template>
 
@@ -104,8 +96,8 @@ export default {
 
   data() {
     return {
-        previewQueryDialogBox:false,
-        createTableQuery:"",
+      previewQueryDialogBox: false,
+      createTableQuery: "",
       tableName: "",
       createTableDialog: false,
       dataType: ["VARCHAR", "DATE", "Integer"],
@@ -114,26 +106,26 @@ export default {
       editedItem: {
         name: "",
         datatype: "",
-        unique:false,
-        notNull:false,
-        editedIndex:-1
+        unique: false,
+        notNull: false,
+        editedIndex: -1,
       },
       headers: [
         { text: "Header", value: "name" },
         {
           text: "DataType",
-          value: "datatype"
+          value: "datatype",
         },
         {
           text: "Unique",
-          value: "unique"
+          value: "unique",
         },
         {
           text: "Not NULL",
-          value: "notNull"
+          value: "notNull",
         },
-        { text: "Actions", value: "actions" }
-      ]
+        { text: "Actions", value: "actions" },
+      ],
     };
   },
   methods: {
@@ -164,53 +156,53 @@ export default {
       }
       this.close();
     },
-    previewQuery(){
-this.createTableQuery="CREATE TABLE IF NOT EXISTS "+this.tableName+" (\n\t";
-for (let i = 0; i < this.tableHeader.length; i++) {
-    if(this.tableHeader[i].name!=undefined && this.tableHeader[i].datatype!=undefined){
-          this.createTableQuery+=this.tableHeader[i].name+" "+this.tableHeader[i].datatype;
-          if(this.tableHeader[i].unique)
-          {
-              this.createTableQuery+=" UNIQUE";
+    previewQuery() {
+      this.createTableQuery =
+        "CREATE TABLE IF NOT EXISTS " + this.tableName + " (\n\t";
+      for (let i = 0; i < this.tableHeader.length; i++) {
+        if (
+          this.tableHeader[i].name != undefined &&
+          this.tableHeader[i].datatype != undefined
+        ) {
+          this.createTableQuery +=
+            this.tableHeader[i].name + " " + this.tableHeader[i].datatype;
+          if (this.tableHeader[i].unique) {
+            this.createTableQuery += " UNIQUE";
           }
-          if(this.tableHeader[i].notNull)
-          {
-              this.createTableQuery+=" NOT NULL";
+          if (this.tableHeader[i].notNull) {
+            this.createTableQuery += " NOT NULL";
           }
-          if(i!=this.tableHeader.length-1)
-          {
-              this.createTableQuery+=",\n\t";
+          if (i != this.tableHeader.length - 1) {
+            this.createTableQuery += ",\n\t";
+          } else {
+            this.createTableQuery += "\n);";
           }
-          else
-          {
-              this.createTableQuery+="\n);"
-          }
-           }
-}
-           console.log(this.createTableQuery);
-           this.previewQueryDialogBox=true;
+        }
+      }
+      console.log(this.createTableQuery);
+      this.previewQueryDialogBox = true;
     },
     async createTable() {
       console.log(this.createTableQuery);
-    //   const table = {
-    //     name: "",
-    //     headers: null
-    //   };
-    //   table.name = this.tableName;
-    //   const createHeader = {};
-      
-        // createHeader[this.tableHeader[i].name] = {
-        //   type: this.tableHeader[i].datatype
-        // };
-     
-    //   table.headers = createHeader;
-      
+      //   const table = {
+      //     name: "",
+      //     headers: null
+      //   };
+      //   table.name = this.tableName;
+      //   const createHeader = {};
+
+      // createHeader[this.tableHeader[i].name] = {
+      //   type: this.tableHeader[i].datatype
+      // };
+
+      //   table.headers = createHeader;
+
       await request.post(
         {
           url: "http://127.0.0.1:8082/createTable",
-          form: JSON.stringify(this.createTableQuery)
+          form: JSON.stringify(this.createTableQuery),
         },
-        function(error, response, body) {
+        function (error, response, body) {
           console.log("query");
           if (!error && response.statusCode == 200) {
             console.log(body);
@@ -223,9 +215,9 @@ for (let i = 0; i < this.tableHeader.length; i++) {
     },
   },
   computed: {
-      previewQueryDialog(){
-          return this.previewQueryDialogBox;
-      }
-  }
+    previewQueryDialog() {
+      return this.previewQueryDialogBox;
+    },
+  },
 };
 </script>

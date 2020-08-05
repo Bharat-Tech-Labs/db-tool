@@ -159,20 +159,18 @@ export default {
         next: "",
       });
     },
-    remove (output) {
-      console.log(output)
-      console.log(this.editedItem.output)
-      for(let i=0;i<this.editedItem.output.length;i++)
-      {
-        if(this.editedItem.output[i]===output)
-        {
+    remove(output) {
+      console.log(output);
+      console.log(this.editedItem.output);
+      for (let i = 0; i < this.editedItem.output.length; i++) {
+        if (this.editedItem.output[i] === output) {
           console.log(i);
           this.editedItem.output.splice(i, 1);
           break;
         }
       }
-        //  this.editedItem.output.splice(this.editedItem.output.findIndex(output), 1)
-     },
+      //  this.editedItem.output.splice(this.editedItem.output.findIndex(output), 1)
+    },
     currentProcess(process) {
       console.log(process);
       return new Promise((resolve, reject) => {
@@ -202,35 +200,34 @@ export default {
         );
       });
     },
-    pipelineEcexute(currentProcessId)
-    {
+    pipelineEcexute(currentProcessId) {
       for (let i = 0; i < this.pipeline.length; i++) {
-          if (this.pipeline[i].id === currentProcessId) {
-            console.log(currentProcessId, this.pipeline[i]);
-            this.currentProcess(this.pipeline[i]).then((id) => {
-              currentProcessId = id;
-              console.log(currentProcessId);
-              if (currentProcessId)  this.pipelineEcexute(currentProcessId);
-            });
-            break;
-          }
+        if (this.pipeline[i].id === currentProcessId) {
+          console.log(currentProcessId, this.pipeline[i]);
+          this.currentProcess(this.pipeline[i]).then((id) => {
+            currentProcessId = id;
+            console.log(currentProcessId);
+            if (currentProcessId) this.pipelineEcexute(currentProcessId);
+          });
+          break;
         }
+      }
     },
     createPipeline() {
       console.log(this.pipeline, this.pipelineName, this.startId);
       this.currentProcessId = this.startId;
       this.pipelineEcexute(this.currentProcessId);
-        // start:for (let i = 0; i < this.pipeline.length; i++) {
-        //   if (this.pipeline[i].id === this.currentProcessId) {
-        //     console.log(this.currentProcessId, this.pipeline[i]);
-        //     this.currentProcess(this.pipeline[i]).then((id) => {
-        //       this.currentProcessId = id;
-        //       console.log(this.currentProcessId);
-        //       if (this.currentProcessId)  continue start;
-        //     });
-        //     break;
-        //   }
-        // }
+      // start:for (let i = 0; i < this.pipeline.length; i++) {
+      //   if (this.pipeline[i].id === this.currentProcessId) {
+      //     console.log(this.currentProcessId, this.pipeline[i]);
+      //     this.currentProcess(this.pipeline[i]).then((id) => {
+      //       this.currentProcessId = id;
+      //       console.log(this.currentProcessId);
+      //       if (this.currentProcessId)  continue start;
+      //     });
+      //     break;
+      //   }
+      // }
     },
   },
   computed: {},
