@@ -1071,6 +1071,18 @@
     resolve-from "5.0.0"
     resolve-global "1.0.0"
 
+"@commitlint/config-angular-type-enum@^9.1.1":
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-angular-type-enum/-/config-angular-type-enum-9.1.1.tgz#6ad46e4830f070ca94ae9903c523b7c4261a900b"
+  integrity sha512-zHJbiZYADQv6xTrDfheLL9PiakiLCiytJsDgh8LBON+9XUokMDoXataRn79LrpGC/TBfYJ3LoDA/6xWO/qQUlQ==
+
+"@commitlint/config-angular@^9.1.1":
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-angular/-/config-angular-9.1.1.tgz#77a606ea7c73f761fadf375e6744082f009aa1ac"
+  integrity sha512-uwzYvAk34Y4mlJ3Zq9LyOi2d1poYxGBkKDkGiacZtOJ+SxB7KZ9QLBuHFQqwN1ikd1E9KxUFQI79ITXaCOJWoA==
+  dependencies:
+    "@commitlint/config-angular-type-enum" "^9.1.1"
+
 "@commitlint/config-conventional@^9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-9.1.1.tgz#c10e6ff8e56bd462fa33e17522b0f98da97daa39"
@@ -13962,6 +13974,11 @@ readdirp@~3.4.0:
   integrity sha512-0xe001vZBnJEK+uKcj8qOhyAKPzIT+gStxWr3LCB0DwcXR5NZJ3IaC+yGnHCYzB/S7ov3m3EEbZI2zeNvX+hGQ==
   dependencies:
     picomatch "^2.2.1"
+
+readline-sync@^1.4.10:
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/readline-sync/-/readline-sync-1.4.10.tgz#41df7fbb4b6312d673011594145705bf56d8873b"
+  integrity sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==
 
 recast@^0.18.1, recast@^0.18.8:
   version "0.18.10"
