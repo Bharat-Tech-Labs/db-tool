@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn color="primary" @click="checkDiskSpaceDialog=true">CheckDisk Space</v-btn>
+    <v-btn color="primary" @click="checkDiskSpaceDialog=true">Check Disk Space</v-btn>
     <v-dialog v-model="checkDiskSpaceDialog">
       <v-card>
 
@@ -25,7 +25,7 @@
             color="primary"
             @click="checkDiskSpaceDialog = false
             
-            ,passwordShow=false"
+            ,sshPasswordShow=false"
           >Cancle</v-btn>
 
           <v-btn color="primary" @click="checkDiskSpace()">check</v-btn>
@@ -79,11 +79,6 @@ export default {
         function(error, response, body) {
           if (!error && response.statusCode == 200) {
             console.log(body);
-            if (body === "success") {
-              this.connectionDialog = false;
-            } else {
-              this.connectionError = true;
-            }
           } else {
             console.log(error);
             console.log(response);
