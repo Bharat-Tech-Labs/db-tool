@@ -1,0 +1,17 @@
+{
+    "npmClient": "yarn",
+    "useWorkspaces": true,
+    "command": {
+        "version": {
+            "conventionalCommits": true,
+            "allowBranch": [
+                "dev"
+            ],
+            "exact": true,
+            "noPush": true,
+            "noCommitHooks": true,
+            "changelogPreset": "angular-codecommit"
+        }
+    },
+    "version": "0.0.11"
+}
