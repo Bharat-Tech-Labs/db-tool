@@ -92,7 +92,7 @@
   "husky": {
     "hooks": {
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
-      "commit-msg": "node --experimental-modules scripts/commitMessageHook.js && commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "node --experimental-modules scripts/commitMessageHook.mjs && commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
