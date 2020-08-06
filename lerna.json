@@ -1,17 +1,6 @@
 {
+    "lerna": "2.11.0",
     "npmClient": "yarn",
     "useWorkspaces": true,
-    "command": {
-        "version": {
-            "conventionalCommits": true,
-            "allowBranch": [
-                "dev"
-            ],
-            "exact": true,
-            "noPush": true,
-            "noCommitHooks": true,
-            "changelogPreset": "angular-codecommit"
-        }
-    },
-    "version": "0.0.11"
-}
+    "version": "0.1.0"
+  }
