@@ -19,7 +19,7 @@ export default async (req, res) =>   {
       privateKey = require('fs').readFileSync(body.sshKey)
     }
     const conn = new ssh2.Client();
-    console.log(conn)
+    
     conn.on('ready', function () {
       // console.log('Client :: ready');
   

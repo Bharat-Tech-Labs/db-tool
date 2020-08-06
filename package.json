@@ -5,7 +5,7 @@
   "private": true,
   "description": "updated description",
   "scripts": {
-    "serve": "yarn --cwd ./API build && yarn --cwd ./DashBoard electron"
+    "serve": "yarn --cwd ./API build && yarn --cwd ./DashBoard electron:build && yarn --cwd ./DashBoard electron"
   },
   "dependencies": {
     "@commitlint/cli": "^9.1.1",

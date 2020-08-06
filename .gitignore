@@ -1,6 +1,11 @@
 .DS_Store
+*/.DS_Store
 node_modules
 /dist
+*/dist_electron
+*/build
+*/node_modules/
+build
 
 # local env files
 .env.local
@@ -23,3 +28,5 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
+/DashBoard/dist_electron
+/API/build
