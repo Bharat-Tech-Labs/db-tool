@@ -4,7 +4,7 @@ module.exports = {
   ],
 pluginOptions: {
   electronBuilder: {
-    preload: '/home/ubuntu/db-query-tool/API/build/app.js',
+    preload: '../API/build/app.js',
     builderOptions: {
       "publish": [{
         "provider": "github",
