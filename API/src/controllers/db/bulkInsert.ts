@@ -1,6 +1,6 @@
 import { sequelize } from './connect';
 export default async (req, res) => {
-    console.log('query');
+    console.log('bulk insert');
     let key;
     let body;
     for (key in req.body) {
