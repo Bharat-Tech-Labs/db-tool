@@ -5,7 +5,6 @@ export default async (req, res) => {
     console.log('table');
     const connection = new Connection();
     const sequelize = connection.getConnection();
-    console.log(sequelize);
     res.writeHead(200, {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
