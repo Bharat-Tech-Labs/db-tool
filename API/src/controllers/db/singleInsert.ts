@@ -1,5 +1,8 @@
-import { sequelize } from './connect';
+import { Connection } from '../../helpers/connection'
 export default async (req, res) => {
+
+    const connection = new Connection();
+    const sequelize = connection.getConnection();
     let key;
     let body;
     for (key in req.body) {
@@ -9,7 +12,7 @@ export default async (req, res) => {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
     });
-    const data : string[] = [];
+    const data: string[] = [];
     data.push(body.data);
     res.statusCode = 200;
     sequelize.authenticate().then(() => {

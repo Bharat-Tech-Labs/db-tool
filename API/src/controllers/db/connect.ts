@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize';
+import { Connection } from '../../helpers/connection'
 import pg from 'pg';
 let sequelize;
 export default async (req, res) => {
@@ -25,11 +26,14 @@ export default async (req, res) => {
         host: body.host,
         port: body.port
     });
+
     sequelize.authenticate().then(() => {
+
         res.end("success");
     }).catch((err) => {
         res.end("error");
     })
+    new Connection(sequelize);
 }
 
-export { sequelize };
+// export { sequelize };

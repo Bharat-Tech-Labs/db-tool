@@ -1,6 +1,11 @@
-import { sequelize } from './connect';
+// import { sequelize } from './connect';
+import { Connection } from '../../helpers/connection'
+
 export default async (req, res) => {
     console.log('table');
+    const connection = new Connection();
+    const sequelize = connection.getConnection();
+    console.log(sequelize);
     res.writeHead(200, {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",

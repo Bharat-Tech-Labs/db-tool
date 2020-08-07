@@ -1,5 +1,8 @@
-import { sequelize } from './connect';
+import { Connection } from '../../helpers/connection'
 export default async (req, res) => {
+
+    const connection = new Connection();
+    const sequelize = connection.getConnection();
     let key;
     let query;
     for (key in req.body) {

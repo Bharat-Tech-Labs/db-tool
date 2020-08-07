@@ -1,5 +1,8 @@
-import { sequelize } from './connect';
+import { Connection } from '../../helpers/connection'
 export default async (req, res) => {
+
+    const connection = new Connection();
+    const sequelize = connection.getConnection();
     console.log('tableColumn');
     res.writeHead(200, {
         "Access-Control-Allow-Origin": "*",
