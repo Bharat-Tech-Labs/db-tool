@@ -28,12 +28,12 @@ export default async (req, res) => {
     });
 
     sequelize.authenticate().then(() => {
-
+        new Connection(sequelize);
         res.end("success");
     }).catch((err) => {
         res.end("error");
     })
-    new Connection(sequelize);
+    
 }
 
 // export { sequelize };
