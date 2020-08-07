@@ -1,4 +1,11 @@
 import { Sequelize } from 'sequelize';
+import logger from 'electron-log';
+const info = logger.create('anotherInstance');
+info.transports.file.level = 'info';
+info.transports.file.file = __dirname + '/info.log';
+const error = logger.create('anotherInstance');
+error.transports.file.level = 'error';
+error.transports.file.file = __dirname + '/error.log';
 import pg from 'pg';
 let sequelize;
 export default async (req, res) => {
@@ -25,9 +32,11 @@ export default async (req, res) => {
         host: body.host,
         port: body.port
     });
-    sequelize.authenticate().then(() => {
+    sequelize.authenticate().then((result) => {
+        info.info("Connection is set up");
         res.end("success");
     }).catch((err) => {
+        error.error(err);
         res.end("error");
     })
 }

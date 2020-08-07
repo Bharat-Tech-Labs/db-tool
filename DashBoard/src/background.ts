@@ -23,7 +23,7 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload:(process.platform === "win32") ? path.join(__dirname,'\\preload.js') :path.join(__dirname, '/preload.js'),
-      nodeIntegration:true
+      // nodeIntegration:true
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       // nodeIntegration: (process.env
